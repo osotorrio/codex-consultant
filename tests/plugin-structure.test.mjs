@@ -40,3 +40,14 @@ test('skill declares read-only project behavior and outside-repo state', () => {
   assert.match(skill, /save-report\.mjs/);
   assert.equal(skill.includes('[TODO:'), false);
 });
+
+test('skill requires interactive plan-mode style interview questions', () => {
+  const skill = readFileSync(skillPath, 'utf8');
+  assert.match(skill, /## Interview Format/);
+  assert.match(skill, /request_user_input/);
+  assert.match(skill, /at most three questions in one batch/);
+  assert.match(skill, /keyboard/);
+  assert.match(skill, /\(Recommended\)/);
+  assert.match(skill, /free-form Other path/);
+  assert.match(skill, /numbered fallback/);
+});

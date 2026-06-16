@@ -62,6 +62,9 @@ available on your machine.
 The consultant will inspect the project, ask a short delta interview, and return
 a structured report you can act on.
 
+The interview uses short selectable questions with recommended defaults, so you
+can move quickly and add extra context only when it matters.
+
 ## What You Get
 
 Each run produces a report with:
