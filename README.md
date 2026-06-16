@@ -24,6 +24,51 @@ If `CODEX_HOME` is not set, Codex's default home is used.
 It skips likely secret-bearing files by default and stores only summarized
 history from local Codex sessions or memories.
 
+## Install And Run
+
+These steps are for authorized testers.
+
+1. Add this repository as a Codex plugin marketplace:
+
+   ```bash
+   codex plugin marketplace add osotorrio/codex-consultant
+   ```
+
+2. Open Codex in any project:
+
+   ```bash
+   cd path/to/your-project
+   codex
+   ```
+
+3. In Codex, open the plugin browser:
+
+   ```text
+   /plugins
+   ```
+
+4. Install **Codex Consultant**, then restart Codex in the project.
+
+5. Switch the session to read-only mode:
+
+   ```text
+   /permissions
+   ```
+
+   Select **Read Only**.
+
+6. Run the consultant:
+
+   ```text
+   $codex-consultant Run a read-only Codex consultant audit for this project.
+   ```
+
+Reports and cross-run state are saved outside the audited project under
+`$CODEX_HOME/codex-consultant/`. If `CODEX_HOME` is unset, Codex uses its
+default home directory.
+
+The helper scripts require Node.js to be available on the tester's machine.
+
 ## Repository Layout
 
 - `.agents/plugins/marketplace.json` exposes the local plugin marketplace.
