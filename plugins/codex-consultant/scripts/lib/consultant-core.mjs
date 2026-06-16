@@ -53,6 +53,14 @@ export function safeReadJson(path) {
   }
 }
 
+export function readFlagValue(rest, flag) {
+  const value = rest.shift();
+  if (!value || value.startsWith('--')) {
+    throw new Error(`Missing value for ${flag}.`);
+  }
+  return value;
+}
+
 function runGit(args, cwd) {
   try {
     return execFileSync('git', args, {
@@ -238,7 +246,8 @@ function sanitizedConfigPreview(path) {
     .split(/\r?\n/)
     .slice(0, 200)
     .map((line) => {
-      if (/token|secret|password|api[_-]?key|auth/i.test(line)) {
+      const key = line.split('=', 1)[0]?.trim() || '';
+      if (isSensitiveConfigKey(key)) {
         return line.replace(/=.*/, '= "<redacted>"');
       }
       return line;
@@ -246,6 +255,12 @@ function sanitizedConfigPreview(path) {
     .filter((line) => line.trim() && !line.trim().startsWith('#'));
 
   return lines.slice(0, 80);
+}
+
+export function isSensitiveConfigKey(key) {
+  return /(^|[._-])(token|secret|password|api[_-]?key|auth|credential|credentials)([._-]|$)/i.test(
+    key
+  );
 }
 
 export function collectCodexLocalState(env = process.env) {

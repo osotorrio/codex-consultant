@@ -1,5 +1,10 @@
 #!/usr/bin/env node
-import { buildInventory, defaultStateRoot, saveInventory } from './lib/consultant-core.mjs';
+import {
+  buildInventory,
+  defaultStateRoot,
+  readFlagValue,
+  saveInventory
+} from './lib/consultant-core.mjs';
 
 function parseArgs(argv) {
   const args = {
@@ -17,9 +22,9 @@ function parseArgs(argv) {
   while (rest.length > 0) {
     const flag = rest.shift();
     if (flag === '--project') {
-      args.project = rest.shift();
+      args.project = readFlagValue(rest, flag);
     } else if (flag === '--state-root') {
-      args.stateRoot = rest.shift();
+      args.stateRoot = readFlagValue(rest, flag);
     } else if (flag === '--save') {
       args.save = true;
     } else if (flag === '--help' || flag === '-h') {

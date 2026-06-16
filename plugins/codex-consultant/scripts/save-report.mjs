@@ -1,5 +1,10 @@
 #!/usr/bin/env node
-import { defaultStateRoot, readStdin, saveReport } from './lib/consultant-core.mjs';
+import {
+  defaultStateRoot,
+  readFlagValue,
+  readStdin,
+  saveReport
+} from './lib/consultant-core.mjs';
 
 function parseArgs(argv) {
   const args = {
@@ -12,11 +17,11 @@ function parseArgs(argv) {
   while (rest.length > 0) {
     const flag = rest.shift();
     if (flag === '--project') {
-      args.project = rest.shift();
+      args.project = readFlagValue(rest, flag);
     } else if (flag === '--state-root') {
-      args.stateRoot = rest.shift();
+      args.stateRoot = readFlagValue(rest, flag);
     } else if (flag === '--title') {
-      args.title = rest.shift();
+      args.title = readFlagValue(rest, flag);
     } else if (flag === '--help' || flag === '-h') {
       args.help = true;
     } else {

@@ -25,7 +25,9 @@ function makeFixture() {
   const root = mkdtempSync(join(tmpdir(), 'codex-consultant-'));
   const project = join(root, 'project');
   const stateRoot = join(root, 'state');
+  const codexHome = join(root, 'codex-home');
   mkdirSync(project, { recursive: true });
+  mkdirSync(codexHome, { recursive: true });
   mkdirSync(join(project, '.github', 'workflows'), { recursive: true });
   writeFileSync(join(project, 'README.md'), '# Fixture\n');
   writeFileSync(join(project, 'AGENTS.md'), '# Instructions\n');
@@ -35,7 +37,7 @@ function makeFixture() {
     JSON.stringify({ scripts: { test: 'node --test', build: 'node build.js' } }, null, 2)
   );
   writeFileSync(join(project, '.github', 'workflows', 'ci.yml'), 'name: CI\n');
-  return { root, project, stateRoot };
+  return { root, project, stateRoot, codexHome };
 }
 
 test('inventory saves state outside the target project and skips secret-like files', () => {
@@ -94,4 +96,56 @@ test('save-report writes markdown outside the target project and updates state',
   const projectEntries = readdirSync(project);
   assert.equal(projectEntries.includes('reports'), false);
   assert.equal(projectEntries.includes('state.json'), false);
+});
+
+test('audit CLI rejects missing flag values', () => {
+  const result = spawnSync(
+    process.execPath,
+    [auditScript, 'inventory', '--project', '--state-root'],
+    { encoding: 'utf8' }
+  );
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Missing value for --project/);
+});
+
+test('save-report CLI rejects missing flag values', () => {
+  const result = spawnSync(
+    process.execPath,
+    [reportScript, '--project', '.', '--title', '--state-root'],
+    { input: '# Report\n', encoding: 'utf8' }
+  );
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Missing value for --title/);
+});
+
+test('config preview redacts sensitive keys without redacting author', () => {
+  const { project, stateRoot, codexHome } = makeFixture();
+  writeFileSync(
+    join(codexHome, 'config.toml'),
+    [
+      'author = "Oscar"',
+      'auth = "token-value"',
+      'api_key = "api-value"',
+      'model = "gpt-5.5"'
+    ].join('\n')
+  );
+
+  const output = execFileSync(
+    process.execPath,
+    [auditScript, 'inventory', '--project', project, '--state-root', stateRoot],
+    {
+      encoding: 'utf8',
+      env: { ...process.env, CODEX_HOME: codexHome }
+    }
+  );
+
+  const inventory = JSON.parse(output);
+  assert.deepEqual(inventory.codexLocalState.configToml.preview, [
+    'author = "Oscar"',
+    'auth = "<redacted>"',
+    'api_key = "<redacted>"',
+    'model = "gpt-5.5"'
+  ]);
 });
