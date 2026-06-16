@@ -13,6 +13,7 @@ test('plugin manifest follows the expected local plugin shape', () => {
   assert.equal(manifest.name, 'codex-consultant');
   assert.match(manifest.version, /^\d+\.\d+\.\d+$/);
   assert.equal(manifest.skills, './skills/');
+  assert.equal(manifest.license, 'UNLICENSED');
   assert.equal(manifest.author.name, 'Codex Consultant');
   assert.equal(manifest.interface.displayName, 'Codex Consultant');
   assert.equal(manifest.interface.category, 'Productivity');

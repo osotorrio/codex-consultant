@@ -41,6 +41,10 @@ history from local Codex sessions or memories.
 npm test
 ```
 
+## License
+
+This project is proprietary and all rights are reserved. See `LICENSE`.
+
 ## Manual Helper Usage
 
 Generate inventory without writing state:
