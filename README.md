@@ -1,32 +1,28 @@
-# codex-consultant
+# Codex Consultant
 
-A Codex plugin that runs a read-only consultant audit of how a project uses
-Codex and produces a structured recommendations report.
+Codex Consultant helps you get more out of Codex in a real project.
 
-The target project stays read-only. The consultant may write only to its own
-state root outside the audited project:
+Run it in any local repo and it will inspect your Codex setup, ask a few useful
+questions, and give you a practical report with recommendations. It is designed
+to help you tighten your setup, reduce repetitive prompting, and move toward a
+more agentic delivery workflow.
 
-```text
-$CODEX_HOME/codex-consultant/
-```
+It does this without editing the project it audits.
 
-If `CODEX_HOME` is not set, Codex's default home is used.
+## Why Use It
 
-## What It Audits
+- Find stale or missing Codex guidance, such as weak `AGENTS.md` instructions.
+- Spot permission, sandbox, MCP, plugin, and workflow opportunities.
+- Turn repeated prompt/response habits into reusable agent workflows.
+- Keep a memory of prior reports and recommendation status across runs.
+- Get a readable action plan instead of a pile of raw repo facts.
 
-- Codex instruction files such as `AGENTS.md` and `AGENTS.override.md`
-- Project Codex settings under `.codex/`
-- Repo skills/plugins under `.agents/`
-- Package scripts, CI workflows, Makefiles, Docker/devcontainer files, and docs
-- Git state and commits since the previous consultant run
-- Local Codex state summaries: config, sessions, memories, plugins, and user skills
+Think of it as a quick Codex setup checkup for your project.
 
-It skips likely secret-bearing files by default and stores only summarized
-history from local Codex sessions or memories.
+## Quick Start
 
-## Install And Run
-
-These steps are for authorized testers.
+These steps are for authorized testers. You need Codex CLI and Node.js
+available on your machine.
 
 1. Add this repository as a Codex plugin marketplace:
 
@@ -34,14 +30,14 @@ These steps are for authorized testers.
    codex plugin marketplace add osotorrio/codex-consultant
    ```
 
-2. Open Codex in any project:
+2. Open Codex in the project you want to review:
 
    ```bash
    cd path/to/your-project
    codex
    ```
 
-3. In Codex, open the plugin browser:
+3. Open the plugin browser:
 
    ```text
    /plugins
@@ -63,24 +59,48 @@ These steps are for authorized testers.
    $codex-consultant Run a read-only Codex consultant audit for this project.
    ```
 
-Reports and cross-run state are saved outside the audited project under
-`$CODEX_HOME/codex-consultant/`. If `CODEX_HOME` is unset, Codex uses its
-default home directory.
+The consultant will inspect the project, ask a short delta interview, and return
+a structured report you can act on.
 
-The helper scripts require Node.js to be available on the tester's machine.
+## What You Get
 
-## Repository Layout
+Each run produces a report with:
 
-- `.agents/plugins/marketplace.json` exposes the local plugin marketplace.
-- `plugins/codex-consultant/.codex-plugin/plugin.json` is the plugin manifest.
+- a snapshot of the project and Codex setup
+- the most important recommendations first
+- evidence for each finding
+- suggested next actions
+- status tracking for prior recommendations
+
+Reports and cross-run state are saved outside the audited project under:
+
+```text
+$CODEX_HOME/codex-consultant/
+```
+
+If `CODEX_HOME` is unset, Codex uses its default home directory.
+
+## Safety Model
+
+The audited project stays read-only. Codex Consultant should not create,
+modify, move, or delete project files.
+
+It skips likely secret-bearing files by default and stores only summarized
+history from local Codex sessions or memories. Report files and state belong to
+the consultant, not to the project being reviewed.
+
+## For Maintainers
+
+Important files:
+
+- `.agents/plugins/marketplace.json` exposes this repo as a plugin marketplace.
+- `plugins/codex-consultant/.codex-plugin/plugin.json` defines the plugin.
 - `plugins/codex-consultant/skills/codex-consultant/SKILL.md` defines the
   consultant workflow.
-- `plugins/codex-consultant/scripts/consultant-audit.mjs` gathers read-only
-  inventory and can save run state outside the target project.
-- `plugins/codex-consultant/scripts/save-report.mjs` saves a Markdown report
-  outside the target project.
+- `plugins/codex-consultant/scripts/` contains the read-only inventory and
+  report-saving helpers.
 
-## Local Validation
+Run the local checks with:
 
 ```bash
 npm test
@@ -88,24 +108,6 @@ npm test
 
 ## License
 
-This project is proprietary and all rights are reserved. See `LICENSE`.
-
-## Manual Helper Usage
-
-Generate inventory without writing state:
-
-```bash
-node plugins/codex-consultant/scripts/consultant-audit.mjs inventory --project .
-```
-
-Generate inventory and save run state outside the project:
-
-```bash
-node plugins/codex-consultant/scripts/consultant-audit.mjs inventory --project . --save
-```
-
-Save a report outside the project:
-
-```bash
-node plugins/codex-consultant/scripts/save-report.mjs --project . --title "Codex Consultant Report" < report.md
-```
+This project is proprietary and all rights are reserved. Use is limited to
+authorized testers unless a separate written license says otherwise. See
+`LICENSE`.
