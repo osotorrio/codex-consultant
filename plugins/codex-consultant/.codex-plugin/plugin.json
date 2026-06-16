@@ -1,0 +1,33 @@
+{
+  "name": "codex-consultant",
+  "version": "0.1.0",
+  "description": "Read-only Codex setup and workflow consultant for local projects.",
+  "author": {
+    "name": "Codex Consultant"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "audit",
+    "workflow",
+    "consulting"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codex Consultant",
+    "shortDescription": "Audit Codex setup and agentic workflow practices.",
+    "longDescription": "Produces read-only recommendations for improving a project's Codex instructions, permissions, automation, context use, and delivery workflow.",
+    "developerName": "Codex Consultant",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read"
+    ],
+    "brandColor": "#2563EB",
+    "defaultPrompt": [
+      "Run a read-only Codex consultant audit.",
+      "Review this project's Codex setup.",
+      "Update my Codex recommendations report."
+    ]
+  }
+}
